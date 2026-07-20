@@ -14,7 +14,7 @@ env:
   REGION: us-central1
   SERVICE_NAME: url-shortner
   REPOSITORY: url-shortner-images
-  IMAGE: us-central1-docker.pkg.dev/project-b081eea8-c457-4bcd-b63/url-shortener-images/url-shortner
+  IMAGE: us-central1-docker.pkg.dev/project-b081eea8-c457-4bcd-b63/url-shortner-images/url-shortner
 
 jobs:
   deploy:
