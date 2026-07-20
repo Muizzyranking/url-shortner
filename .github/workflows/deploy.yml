@@ -1,0 +1,54 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  PROJECT_ID: project-b081eea8-c457-4bcd-b63
+  REGION: us-central1
+  SERVICE_NAME: url-shortner
+  REPOSITORY: url-shortener-images
+  IMAGE: us-central1-docker.pkg.dev/project-b081eea8-c457-4bcd-b63/url-shortener-images/url-shortner
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: "projects/208441550973/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
+          service_account: "cloud-run-deployer@project-b081eea8-c457-4bcd-b63.iam.gserviceaccount.com"
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Build image
+        run: docker build -t ${{ env.IMAGE }}:${{ github.sha }} -t ${{ env.IMAGE }}:latest .
+
+      - name: Push image
+        run: |
+          docker push ${{ env.IMAGE }}:${{ github.sha }}
+          docker push ${{ env.IMAGE }}:latest
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image ${{ env.IMAGE }}:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --set-env-vars DATABASE_URL=${{ secrets.DATABASE_URL }},REDIS_URL=${{ secrets.REDIS_URL }}
