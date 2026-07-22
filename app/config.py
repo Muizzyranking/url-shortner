@@ -19,10 +19,7 @@ class Settings(BaseSettings):
 
     # Slugs / links
     SLUG_LENGTH: int = Field(default=7)
-    BASE_REDIRECT_URL: str = Field(
-        default="http://localhost:8080",
-        description="Public base URL used when returning short links to clients.",
-    )
+    BASE_REDIRECT_URL: str = Field(default="http://localhost:8080")
 
     @computed_field
     @cached_property
@@ -61,4 +58,4 @@ class Settings(BaseSettings):
         return sslmode in ("require", "verify-ca", "verify-full")
 
 
-settings = Settings()
+settings = Settings()  # pyright: ignore
