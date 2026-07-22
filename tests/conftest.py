@@ -32,6 +32,8 @@ async def _test_db():
 
 @pytest.fixture(autouse=True)
 async def _test_redis():
+    if redis_module._redis is not None:
+        await redis_module._redis.aclose()
     redis_module._redis = None
     redis = cache_module.get_redis()
     await redis.flushdb()
