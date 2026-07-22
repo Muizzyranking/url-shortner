@@ -10,7 +10,16 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "asyncpg>=0.31.0",
+    "fastlimit>=0.1.1",
+    "httpx>=0.28.1",
+    "pydantic-settings>=2.14.2",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "redis>=8.0.1",
     "ruff>=0.15.22",
+    "shortuuid>=1.0.13",
+    "sqlalchemy[asyncio]>=2.0.51",
 ]
 
 [tool.ruff]
