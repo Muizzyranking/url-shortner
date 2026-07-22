@@ -36,17 +36,25 @@ def _is_browser_request(request: Request) -> bool:
 
 def _render_template(name: str, context: dict) -> HTMLResponse:
     template = _jinja_env.get_template(name)
-    return HTMLResponse(content=template.render(context), status_code=status.HTTP_404_NOT_FOUND)
+    return HTMLResponse(
+        content=template.render(context), status_code=status.HTTP_404_NOT_FOUND
+    )
 
 
 def register_exception_handlers(app) -> None:
     @app.exception_handler(AppError)
-    async def app_error_handler(request: Request, exc: AppError) -> HTMLResponse | JSONResponse:
+    async def app_error_handler(
+        request: Request, exc: AppError
+    ) -> HTMLResponse | JSONResponse:
         if _is_browser_request(request):
             if isinstance(exc, (LinkNotFoundError, LinkExpiredError)):
                 slug = request.url.path.strip("/")
-                return _render_template("not-found.html", {"slug": slug, "detail": exc.message})
-            return _render_template("not-found.html", {"slug": "", "detail": exc.message})
+                return _render_template(
+                    "not-found.html", {"slug": slug, "detail": exc.message}
+                )
+            return _render_template(
+                "not-found.html", {"slug": "", "detail": exc.message}
+            )
         return JSONResponse(
             status_code=exc.status_code, content={"detail": exc.message}
         )
