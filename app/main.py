@@ -3,6 +3,8 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastlimit import FastLimit
 
 from app.config import settings
@@ -30,6 +32,7 @@ async def lifespan(app: FastAPI):
     await close_redis()
     await engine.dispose()
 
+
 app = FastAPI(
     name=settings.APP_NAME,
     version="1.0.0",
@@ -38,6 +41,14 @@ app = FastAPI(
 )
 
 limiter.init_app(app)
+
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+
+@app.get("/", include_in_schema=False)
+async def ui_index() -> FileResponse:
+    return FileResponse(STATIC_DIR / "index.html")
+
 
 register_exception_handlers(app)
 app.include_router(router)
