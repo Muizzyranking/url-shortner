@@ -8,8 +8,8 @@ COPY pyproject.toml uv.lock ./
 
 RUN uv sync --frozen --no-dev
 
-COPY main.py ./
+COPY app/ ./app/
 
 EXPOSE 8000
 
-CMD uv run uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}
+CMD uv run uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8080}
