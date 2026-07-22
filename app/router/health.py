@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from sqlalchemy import text
 
-from app.core.cache import ping as redis_ping
+from app.db.redis import ping as redis_ping
 from app.deps import DB
 
 
