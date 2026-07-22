@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}shortlink{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/style.css" />
+    <style>
+      .error-page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 60vh;
+        text-align: center;
+        gap: 16px;
+      }
+      .error-page .error-code {
+        font-family: var(--display);
+        font-size: 64px;
+        font-weight: 700;
+        color: var(--accent);
+        line-height: 1;
+      }
+      .error-page .error-msg {
+        font-family: var(--mono);
+        font-size: 14px;
+        color: var(--ink-muted);
+        max-width: 400px;
+      }
+      .error-page .home-btn {
+        font-family: var(--sans);
+        font-weight: 600;
+        font-size: 13px;
+        background: var(--ink);
+        color: var(--paper);
+        border: none;
+        border-radius: var(--radius);
+        padding: 10px 22px;
+        cursor: pointer;
+        text-decoration: none;
+        margin-top: 8px;
+        display: inline-block;
+      }
+      .error-page .home-btn:hover {
+        background: var(--accent-ink);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">&#10230;</span>
+          <a href="/" style="text-decoration:none;color:inherit">shortlink</a>
+        </div>
+      </header>
+
+      <main>{% block content %}{% endblock %}</main>
+    </div>
+  </body>
+</html>

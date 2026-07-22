@@ -1,6 +1,12 @@
+from pathlib import Path
+
 from fastapi import Request, status
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse
+from jinja2 import Environment, FileSystemLoader
+
+_TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "templates"
+_jinja_env = Environment(loader=FileSystemLoader(_TEMPLATE_DIR), autoescape=True)
 
 
 class AppError(Exception):
@@ -23,9 +29,24 @@ class LinkExpiredError(AppError):
     status_code = status.HTTP_404_NOT_FOUND
 
 
+def _is_browser_request(request: Request) -> bool:
+    accept = request.headers.get("accept", "")
+    return "text/html" in accept and "json" not in accept
+
+
+def _render_template(name: str, context: dict) -> HTMLResponse:
+    template = _jinja_env.get_template(name)
+    return HTMLResponse(content=template.render(context), status_code=status.HTTP_404_NOT_FOUND)
+
+
 def register_exception_handlers(app) -> None:
     @app.exception_handler(AppError)
-    async def app_error_handler(request: Request, exc: AppError) -> JSONResponse:
+    async def app_error_handler(request: Request, exc: AppError) -> HTMLResponse | JSONResponse:
+        if _is_browser_request(request):
+            if isinstance(exc, (LinkNotFoundError, LinkExpiredError)):
+                slug = request.url.path.strip("/")
+                return _render_template("not-found.html", {"slug": slug, "detail": exc.message})
+            return _render_template("not-found.html", {"slug": "", "detail": exc.message})
         return JSONResponse(
             status_code=exc.status_code, content={"detail": exc.message}
         )
