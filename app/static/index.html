@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>shortlink</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">&#10230;</span>
+          <span>shortlink</span>
+        </div>
+      </header>
+
+      <form id="create-form" class="composer" autocomplete="off" novalidate>
+        <div class="field field-url">
+          <label for="target_url">Destination URL</label>
+          <input
+            type="text"
+            id="target_url"
+            name="target_url"
+            placeholder="https://destination.example.com/long/path"
+          />
+          <p class="field-error" id="err-target_url"></p>
+        </div>
+
+        <div class="field field-slug">
+          <label for="slug"
+            >Custom slug <span class="optional">optional</span></label
+          >
+          <input
+            type="text"
+            id="slug"
+            name="slug"
+            placeholder="auto-generated"
+          />
+          <p class="field-error" id="err-slug"></p>
+        </div>
+
+        <div class="field field-expiry">
+          <label id="expiry-label">Expires</label>
+          <div
+            class="expiry-presets"
+            role="group"
+            aria-labelledby="expiry-label"
+          >
+            <button type="button" class="preset-btn active" data-seconds="">
+              Never
+            </button>
+            <button type="button" class="preset-btn" data-seconds="3600">
+              1 hour
+            </button>
+            <button type="button" class="preset-btn" data-seconds="86400">
+              1 day
+            </button>
+            <button type="button" class="preset-btn" data-seconds="604800">
+              1 week
+            </button>
+            <button type="button" class="preset-btn" data-seconds="2592000">
+              30 days
+            </button>
+            <button type="button" class="preset-btn" data-seconds="custom">
+              Custom&hellip;
+            </button>
+          </div>
+          <div class="expiry-custom" id="expiry-custom" hidden>
+            <input type="number" id="expiry_amount" min="1" placeholder="5" />
+            <select id="expiry_unit">
+              <option value="60">minutes</option>
+              <option value="3600" selected>hours</option>
+              <option value="86400">days</option>
+            </select>
+          </div>
+          <p class="field-error" id="err-expiry"></p>
+        </div>
+
+        <button type="submit" class="submit-btn">Create hop</button>
+      </form>
+
+      <main>
+        <div id="banner" class="banner" hidden></div>
+
+        <table class="routes" id="routes-table" hidden>
+          <thead>
+            <tr>
+              <th class="col-slug">route</th>
+              <th class="col-target">destination</th>
+              <th class="col-clicks">clicks</th>
+              <th class="col-created">created</th>
+              <th class="col-expires">expires</th>
+              <th class="col-actions"></th>
+            </tr>
+          </thead>
+          <tbody id="routes-body"></tbody>
+        </table>
+
+        <p id="empty-state" class="empty">
+          No routes yet &mdash; create your first hop above.
+        </p>
+        <p id="loading-state" class="empty">Loading routes&hellip;</p>
+      </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
