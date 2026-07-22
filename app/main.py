@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
+from fastlimit import FastLimit
 
 from app.config import settings
 from app.core.exceptions import register_exception_handlers
@@ -14,6 +15,8 @@ STATIC_DIR = Path(__file__).parent / "static"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("urlshortener")
+
+limiter = FastLimit(redis_url=settings.REDIS_URL)
 
 
 @asynccontextmanager
@@ -34,6 +37,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+limiter.init_app(app)
 
 register_exception_handlers(app)
 app.include_router(router)
