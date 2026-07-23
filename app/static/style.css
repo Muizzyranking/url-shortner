@@ -65,12 +65,12 @@ body {
 }
 
 .docs-link {
-  font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--ink-faint);
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-muted);
   text-decoration: none;
-  border: 1px solid var(--border);
+  border: 1px solid var(--ink);
   border-radius: var(--radius);
   padding: 5px 10px;
 }

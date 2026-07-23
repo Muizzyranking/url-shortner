@@ -198,7 +198,7 @@ function buildRouteRow(link) {
     </td>
   `;
 
-  tr.querySelector(".slug-btn").addEventListener("click", () => toggleDetail(link.slug));
+  tr.addEventListener("click", () => toggleDetail(link.slug));
   tr.querySelector(".copy-btn").addEventListener("click", (e) => {
     e.stopPropagation();
     copyShortUrl(link);
